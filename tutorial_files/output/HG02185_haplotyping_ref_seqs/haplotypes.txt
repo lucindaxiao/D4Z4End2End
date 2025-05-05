@@ -1,0 +1,5 @@
+read_id	haplotype	D4Z4_units	spanning	chromosome	ranges	strand
+4q_hap2	4qA	28	yes	chr4	25-132922	+
+4q_hap1	4qB	15	yes	chr4	63039-166283	+
+10q_hap2	10qA	26	yes	chr10	1-173461	+
+10q_hap1	10qA	23	yes	chr10	14-238192	+

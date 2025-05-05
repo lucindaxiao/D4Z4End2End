@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz"></div>
+<div id="reads_area"></div>
+
+<!-- Plugin for color scale -->
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+<!-- Tooltip style -->
+<style>
+.tooltip{
+      position      : absolute;
+      text-align    : center;
+      max-width     : 100px;
+      max-height    : 700px;
+      padding       : 8px;
+      border        : none;
+      border-radius : 8px;
+      margin-top    : -30px;
+      font          : 10px sans-serif;
+      background    : black;
+      color         : black;
+      pointer-events: none;
+  }
+</style>
+
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 30, bottom: 50, left: 50},
+    width = 1300 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+
+var svg = d3.select("#my_dataviz")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform","translate(" + margin.left + "," + margin.top + ")");
+
+function highlight(d){
+
+var chromosome = d.chromosome
+var ranges = d.ranges
+
+  d3.select(this).attr("fill","#1f77b4");
+  document.getElementById("reads_area").innerHTML = "";
+
+var margin = {top: 10, right: 40, bottom: 30, left: 220},
+      width = 1000 - margin.left - margin.right,
+      height = 180 - margin.top - margin.bottom;
+
+var x = d3.scaleLinear()        // This is the min and the max of the data: 0 to 100 if percentages
+          .range([0, width]);
+
+var y = d3.scaleBand()       // This is the min and the max of the data: 0 to 100 if percentages
+            .range([margin.top, height - margin.bottom])
+            .padding(0.7);
+
+var svg2 = d3.select("#reads_area")
+              .append("svg")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+              .attr("transform",  "translate(" + margin.left + "," + margin.top + ")");
+
+var tooltip = d3.select("#reads_area")
+                .append("div")
+                .style("opacity", 1)
+                .attr("class", "tooltip")
+                .style("background-color", "white")
+                .style("border", "solid")
+                .style("border-width", "1px")
+                .style("border-radius", "5px")
+                .style("padding", "10px")
+
+  d3.tsv("reads_features.txt", function(error, data) {
+    if (error) throw error;
+    data.forEach(function(d) {
+      if (d.element === "DUX4") return;
+      d.read_len = +d.read_len;
+      d.unit_start = +d.start;
+      d.unit_end = +d.end;
+      d.unit_len = +d.element_len;
+    });
+
+var nested_data = d3.nest()
+                    .key(function(d) { return d.read_name; })
+                    .entries(data);
+
+var nested_data_map = d3.map(nested_data, d => d.key)
+
+// console.log(nested_data_map["$" + d.read_id].values);
+
+x.domain([0,nested_data_map["$" + d.read_id].values[0].read_len]).nice()
+y.domain([d.read_id])
+
+
+var plot_data = nested_data_map["$" + d.read_id].values
+
+var g = svg2.selectAll("g")
+            .data(plot_data)
+            .enter()
+
+g.append('rect')
+ .attr("x", x(0))
+ .attr("y", function(d, i) {return y(d.read_name); })
+ .attr("width", function(d, i) {return x(d.read_len); })
+ .attr("height", y.bandwidth())
+ .attr("fill", "#F9E79F")
+ .attr('stroke', 'black')
+ .on("mouseover", function(d,i) {tooltip.html("Read length : " + (d.read_len.toString(10)) + "<br>" + "Aligned to : " + chromosome + "<br>" + "Ranges : " + ranges)
+                                        .style("opacity", 1)
+                                        .style('left', (d3.event.pageX + 15) + 'px')
+                                        .style('top', (d3.event.pageY - 20) + 'px')
+                                        .style("display", "inline-block");
+                                d3.select(this)})
+ .on("mouseout", function(d, i) {tooltip.style("display", "none");
+                          d3.select(this)});
+
+g.append('rect')
+  .attr("x", function(d, i) {return x(d.unit_start); })
+  .attr("y", function(d, i) {return y(d.read_name); })
+  .attr("width", function(d, i) {return x(d.unit_len); })
+  .attr("y", function(d, i) {
+  if (d.element == "BlnI" || d.element == "XapI" || d.element == "PAS_4qA" || d.element == "PAS_10qA") {return y(d.read_name) + y.bandwidth() * 0.065;}
+  else {return y(d.read_name);}})
+  .attr("height", function(d, i) {
+    if (d.element == "BlnI" || d.element == "XapI" || d.element == "PAS_4qA" || d.element == "PAS_10qA") {return y.bandwidth() * 0.87;}
+    else {return y.bandwidth();}
+  })
+  .attr("fill", function(d, i) {
+    if (d.element == "D4Z4_unit") {return "#F39C12"}
+    else if (d.element == "p13E-11") {return "#C0392B"}
+    else if (d.element == "pLAM") {return "#27AE60"}
+    else if (d.element == "B_specific") {return "#60bae0"}
+    else if (d.element == "beta_sat") {return "#98c76f"}
+    else if (d.element == "BlnI") {return ""}
+    else if (d.element == "XapI") {return ""}
+    else if (d.element == "PAS_4qA") {return ""}
+    else if (d.element == "PAS_10qA") {return ""}})
+  .attr('stroke', function(d, i) {
+    if (d.element == "D4Z4_unit") {return "black"}
+    else if (d.element == "p13E-11") {return "black"}
+    else if (d.element == "pLAM") {return "black"}
+    else if (d.element == "B_specific") {return "black"}
+    else if (d.element == "beta_sat") {return "black"}
+    else if (d.element == "BlnI") {return "#a6e1e3"}
+    else if (d.element == "XapI") {return "#f5dce3"}
+    else if (d.element == "PAS_4qA") {return "gray"}
+    else if (d.element == "PAS_10qA") {return "gray"}})
+  .attr('stroke-width', function(d, i) {
+    if (d.element == "PAS_4qA" || d.element == "PAS_10qA") {return "0.8"}
+    else {return "1"}})
+  .attr('opacity', function(d, i) {
+    if (d.element === "BlnI" || d.element === "XapI" || d.element == "PAS_4qA" || d.element == "PAS_10qA") {return "1"}
+    else {return d3.select(this).attr("opacity");}})
+  .on("mouseover", function(d,i) {tooltip.html("Element : " + (d.element) + "<br>" + "Length : " + (d.unit_len.toString(10)) +"<br>" + "MapQ : " + (d.mapq) + "<br>" + "Strand : "  + (d.strand) + "<br>"
+                                      + "Total " + (d.element) + "'s : " + (d.num_of_units.toString(10)))
+                                         .style("opacity", 1)
+                                         .style('left', (d3.event.pageX + 25) + 'px')
+                                         .style('top', (d3.event.pageY - 40) + 'px')
+                                         .style("display", "inline-block");
+                                  d3.select(this)
+                                    .attr("fill", "red");})
+  .on("mouseout", function(d, i) {tooltip.style("display", "none");
+                                  d3.select(this)
+                                    .attr("fill", function(d, i) {if (d.element == "D4Z4_unit") {return "#F39C12"}
+                                                                  else if (d.element == "p13E-11") {return "#C0392B"}
+                                                                  else if (d.element == "pLAM") {return "#27AE60"}
+                                                                  else if (d.element == "B_specific") {return "#33CEFF"}
+                                                                  else if (d.element == "beta_sat") {return "#a5eb67"}
+                                                                  else if (d.element == "PAS_4qA") {return ""}
+                                                                  else if (d.element == "PAS_10qA") {return ""}
+                                                                  else if (d.element == "BlnI") {return ""}
+                                                                  else if (d.element == "XapI") {return ""}})});
+
+svg2.append('g')
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+
+svg2.append('g')
+    .call(d3.axisLeft(y));
+  })
+    }
+
+
+d3.tsv("haplotypes.txt", function(error,data) {
+  if (error) throw error;
+  data.forEach(function(d) {
+     d.D4Z4_units = +d.D4Z4_units;
+  });
+
+  // Compute quartiles, median, inter quantile range min and max --> these info are then used to draw the box.
+  var sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
+                  .key(function(d) { return d.haplotype;})
+                  .entries(data)
+
+// console.log(sumstat)
+// console.log(data)
+
+var dataKeys = sumstat.map(function(d) { return d.key; });
+var desiredOrder = ["4qA", "4qB", "4q", "10qA", "10qB", "10q"];
+var filteredOrder = desiredOrder.filter(function(d) { return dataKeys.includes(d); });
+
+var x = d3.scaleBand()        // This is the min and the max of the data: 0 to 100 if percentages
+          .range([0, width])
+          .domain(filteredOrder)
+          .padding(.50);
+
+var y = d3.scaleLinear()
+          .domain([70,0])       // This is the min and the max of the data: 0 to 100 if percentages
+          .range([margin.top, height - margin.bottom])
+
+svg.append('g')
+   .attr("transform", "translate(0," + height + ")")
+   .call(d3.axisBottom(x));
+                  // X scale and Axis
+                  // This is the corresponding value I want in Pixel
+
+svg.append('g')
+   .call(d3.axisLeft(y));
+
+var jitterWidth = 60
+
+svg.selectAll("indPoints")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("cy", function(d){ return(y(d.D4Z4_units))})
+    .attr("cx", function(d){ return( x(d.haplotype) + (x.bandwidth()/2) - jitterWidth/2 + Math.random()*jitterWidth )})
+    .attr("r", 6)
+    .style("fill", function(d) { if (d.spanning == "yes") {return "red"}
+                                   else {return "blue"} })
+    .style("opacity", 0.5)
+    .on("mouseover", highlight)
+
+})
+
+</script>

@@ -1,0 +1,3 @@
+#line	motif	seq	start	end	strand	seqLen	querybp	mRatio	m	mm	i	d
+1	TTAGGG	4q_hap1	195499	199690	+	199703	4160	NA	NA	NA	NA	NA
+#line	motif	seq	start	end	strand	seqLen	querybp	mRatio	m	mm	i	d

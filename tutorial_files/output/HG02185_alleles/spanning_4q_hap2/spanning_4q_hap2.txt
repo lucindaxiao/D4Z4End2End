@@ -1,0 +1,2 @@
+a611c0d0-c0f3-463f-8ac8-46d570b091bb	4qA	28	yes	chr4	29-127365	+
+f4fbde23-cce9-492e-a582-65c8f4383a21	4qA	28	yes	chr4	25-132922	+
