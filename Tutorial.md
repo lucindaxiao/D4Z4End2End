@@ -84,7 +84,9 @@ You should run the pipeline from the `D4Z4End2End` directory. Your output files 
 
    Each dot is a raw read, plotted based on its haplotype (x-axis) and number of D4Z4 units (y-axis). Red dots are reads that span the whole D4Z4 array, and blue dots are non-spanning reads.
 
-   Spanning reads can be used to identify distinct 4q and 10q alleles. Some extra annotations have been added to the screenshot to point out the four D4Z4 alleles that were identified for HG02185.
+   Spanning reads can be used to identify distinct 4q and 10q alleles. Some extra annotations have been added to the screenshot to point out the four D4Z4 alleles that were identified for HG02185. Since the number of D4Z4 units plotted on the y-axis also includes partial D4Z4 units at the proximal and distal ends of the array, here the number of complete 3.3kb repeat units (which is what is annotated on the screenshot, and what would be reported for genetic testing results) is 2 units less than the y-axis values.
+
+   Non-spanning reads may also provide information about additional alleles not captured by spanning reads. This dataset contains spanning reads for all four 4q and 10q alleles; however, if hypothetically there was an additional blue dot at 40RU in the 4qA column of the plot above, this would suggest the presence of another 4qA allele with ≥38RUs (excluding the proximal and distal repeats).
    
    You can mouse over the individual dots to display the annotated raw read underneath the main plot. Mousing over the features in the raw read displays a pop-up with more information about the feature alignment. Here we have moused over one of the 10qA 24RU dots, and the p13E-11 feature in the raw read.
 
