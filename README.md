@@ -2,7 +2,7 @@
 
 D4Z4End2End is an all-in-one, long-read based pipeline for the complete genetic and epigenetic characterisation of D4Z4 macrosatellite arrays.
 
-It accompanies our preprint [D4Z4End2End: complete genetic and epigenetic architecture of D4Z4 macrosatellites in FSHD, BAMS and reference cohorts](https://doi.org/10.1101/2025.04.24.25326320), available on medRxiv.
+It accompanies our publication [Complete genetic and epigenetic architecture of D4Z4 macrosatellites in FSHD, BAMS and reference cohorts with D4Z4End2End](https://doi.org/10.1101/gr.280907.125), published in Genome Research.
 
 ## Background
 The D4Z4 macrosatellite array is found at the telomeric ends of chromosome 4 (4q35) and chromosome 10 (10q26), and contains anywhere between 1 to 100+ 3.3kb tandem repeat units. Each D4Z4 unit contains a partial copy of the *DUX4* gene, and a full length *DUX4* is present at the end of the array.
@@ -18,7 +18,7 @@ Despite the D4Z4 macrosatellite's relevance to human health, many aspects of its
 ![FSHD pathogenesis](figures/FSHD_pathogenesis.png)
 
 ## D4Z4End2End overview
-D4Z4End2End is an all-in-one, long-read based pipeline for exploring the genetic and epigenetic architecture of full-length D4Z4 arrays. Due to the D4Z4 array's size, it works optimally with ultra-long read sequencing (see our [preprint](https://doi.org/10.1101/2025.04.24.25326320) for details).
+D4Z4End2End is an all-in-one, long-read based pipeline for exploring the genetic and epigenetic architecture of full-length D4Z4 arrays. Due to the D4Z4 array's size, it works optimally with ultra-long read sequencing (see our [publication](https://doi.org/10.1101/gr.280907.125) for details).
 
 D4Z4End2End:
 - Processes D4Z4-containing raw reads to annotate them with their features and assign them to haplotypes
@@ -40,4 +40,4 @@ See the `Tutorial.md` file for instructions on how to install and run the pipeli
 
 ## Acknowledgements
 
-We thank all of the authors and participants in the [D4Z4End2End](https://doi.org/10.1101/2025.04.24.25326320) project for their contributions to the study. For the D4Z4End2End pipeline, particular acknowledgements go to Ayush Semwal and Quentin Gouil for the original version of the D4Z4_haplotyping.py script and interactive visualisation tool, and to Shian Su as the creator of NanoMethViz.
+We thank all of the authors and participants in the [D4Z4End2End](https://doi.org/10.1101/gr.280907.125) project for their contributions to the study. For the D4Z4End2End pipeline, particular acknowledgements go to Ayush Semwal and Quentin Gouil for the original version of the D4Z4_haplotyping.py script and interactive visualisation tool, and to Shian Su as the creator of NanoMethViz.
